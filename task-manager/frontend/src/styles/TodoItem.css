@@ -1,49 +1,24 @@
 .todo-item {
     background: #ffffff;
-    border: 1px solid #e0e6ed;
+    border: 1px solid var(--gray-light);
     border-radius: 12px;
-    padding: 18px;
-    height: 100%;
+    padding: 20px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: left;
 }
 
 .todo-item.completed {
     background-color: #f1fcf4;
-    border-color: #c3e6cb;
-}
-
-
-.todo-content {
-    text-align: left;
-    margin-bottom: 15px;
-}
-
-.todo-description {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 8px 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.edit-mode textarea {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    resize: none;
-    font-family: inherit;
-    font-size: 0.9rem;
+    border-color: var(--success);
 }
 
 .todo-content h3 {
-    margin: 5px 0;
+    margin: 10px 0;
     font-size: 1.1rem;
     color: #333;
 }
@@ -53,19 +28,17 @@
     color: #888;
 }
 
-.timestamp {
-    font-size: 0.7rem;
-    color: #999;
-    margin: 0;
+.todo-description {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 8px 0;
+    display: -webkit-box;
 }
 
-.due-date {
-    font-size: 0.8rem;
-    color: #555;
-    font-weight: 600;
-    margin: 4px 0;
-}
+.timestamp { font-size: 0.7rem; color: #999; }
+.due-date { font-size: 0.8rem; color: #555; font-weight: 600; }
 
+/* Badges */
 .badge {
     display: inline-block;
     padding: 2px 8px;
@@ -75,31 +48,10 @@
     text-transform: uppercase;
     margin-top: 8px;
 }
-
-.badge.high { background: #fee2e2; color: #dc2626; }
+.badge.high { background: #fee2e2; color: var(--danger); }
 .badge.medium { background: #fef3c7; color: #d97706; }
-.badge.low { background: #dcfce7; color: #16a34a; }
+.badge.low { background: #dcfce7; color: var(--success); }
 
-.item-actions {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.item-actions button {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: none;
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.toggle-btn { background: #007bff; color: white; }
-.edit-btn { background: #6c757d; color: white; }
-.delete-btn { background: #dc3545; color: white; }
 
 .edit-mode {
     display: flex;
@@ -107,16 +59,36 @@
     gap: 8px;
 }
 
-.edit-mode input, .edit-mode select {
+.edit-mode input, 
+.edit-mode select, 
+.edit-mode textarea {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
 }
 
-.edit-actions {
+.item-actions, .edit-actions {
     display: flex;
     gap: 5px;
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
 }
 
-.save-btn { background: #28a745; color: white; flex: 1; }
-.cancel-btn { background: #eee; color: #333; flex: 1; }
+.item-actions button, .edit-actions button {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+}
+
+.toggle-btn { background: var(--primary); color: white; }
+.edit-btn { background: #6c757d; color: white; }
+.delete-btn { background: var(--danger); color: white; }
+.save-btn { background: var(--success); color: white; }
+.cancel-btn { background: #eee; color: #333; }

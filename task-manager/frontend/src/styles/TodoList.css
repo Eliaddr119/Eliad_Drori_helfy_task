@@ -1,11 +1,16 @@
 :root {
     --items-per-view: 3;
+    --gap: 15px;
+    --primary: #007bff;
+    --success: #28a745;
+    --danger: #dc3545;
+    --gray-light: #e0e6ed;
 }
 
 .carousel-container {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: var(--gap);
     width: 95%;
     max-width: 1200px;
     margin: 40px auto;
@@ -17,24 +22,24 @@
     border: 3px solid #333;
     border-radius: 12px;
     background-color: #f0f4f8;
+    padding: 5px 0; 
 }
 
 .carousel-track {
     display: flex;
-    transition: transform 0.4s ease-in-out;
     align-items: stretch;
+    will-change: transform;
 }
 
 .carousel-slide {
-    min-width: calc(100% / var(--items-per-view));
-    padding: 15px;
+    flex: 0 0 calc(100% / var(--items-per-view));
+    padding: var(--gap);
     box-sizing: border-box;
-    text-align: center;
-    flex-shrink: 0;
+    display: flex; 
 }
 
 .nav-btn {
-    background: #007bff;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 8px;
@@ -42,51 +47,16 @@
     cursor: pointer;
     font-weight: bold;
     min-width: 50px;
+    transition: opacity 0.2s;
 }
 
-.nav-btn:hover {
-    background: #0056b3;
-}
-
-.todo-item {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.todo-item.completed {
-    background-color: #d4edda;
-    border: 2px solid #28a745;
-}
-
-.badge.high { color: #dc3545; font-weight: bold; }
-.badge.medium { color: #ffc107; font-weight: bold; }
-.badge.low { color: #28a745; font-weight: bold; }
-
-.todo-content h3 {
-    margin: 10px 0;
-    color: #333;
-}
-
-.display-mode button {
-    margin: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-}
+.nav-btn:hover { opacity: 0.9; }
 
 @media (max-width: 800px) {
-    :root {
-        --items-per-view: 2;
-    }
+    :root { --items-per-view: 2; }
 }
 
 @media (max-width: 500px) {
-    :root {
-        --items-per-view: 1;
-    }
+    :root { --items-per-view: 1; }
+    .carousel-container { width: 98%; gap: 5px; }
 }

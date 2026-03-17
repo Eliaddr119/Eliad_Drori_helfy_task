@@ -1,72 +1,88 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TodoItem from "./TodoItem";
 import "../styles/TodoList.css";
 
 function TodoList({ todos, onDelete, onComplete, onUpdate }) {
   const itemsPerView = 3;
-  
-  const [extendedTodos, setExtendedTodos] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(itemsPerView);
-  const [isTransitioning, setIsTransitioning] = useState(true);
+  const isCarouselActive = todos.length > itemsPerView;
 
+  const [currentIndex, setCurrentIndex] = useState(isCarouselActive ? itemsPerView : 0)
+  const [isTransitioning, setIsTransitioning] = useState(true)
+
+  const displayTodos = useMemo(() => {
+    if (!isCarouselActive) return todos
+    const startClones = todos.slice(0, itemsPerView)
+    const endClones = todos.slice(-itemsPerView);
+    return [...endClones, ...todos, ...startClones]
+  }, [todos, isCarouselActive])
 
   useEffect(() => {
-    if (todos.length > 0) {
-      const startClones = todos.slice(0, itemsPerView);
-      const endClones = todos.slice(-itemsPerView);
-      setExtendedTodos([...endClones, ...todos, ...startClones]);
+    if (!isCarouselActive) {
+      setCurrentIndex(0);
+    } else if (currentIndex === 0) {
+      setCurrentIndex(itemsPerView);
     }
-  }, [todos]);
-
+  }, [isCarouselActive, currentIndex]);
 
   const handleTransitionEnd = () => {
-    if (currentIndex >= extendedTodos.length - itemsPerView) {
-      setIsTransitioning(false); 
+    if (!isCarouselActive) return;
+
+    if (currentIndex >= displayTodos.length - itemsPerView) {
+      setIsTransitioning(false);
       setCurrentIndex(itemsPerView);
     } else if (currentIndex < itemsPerView) {
-      setIsTransitioning(false); 
-      setCurrentIndex(extendedTodos.length - (itemsPerView * 2)); 
+      setIsTransitioning(false);
+      setCurrentIndex(displayTodos.length - itemsPerView * 2)
     }
   };
 
   useEffect(() => {
     if (!isTransitioning) {
-      setTimeout(() => setIsTransitioning(true), 10);
+      requestAnimationFrame(() => {
+        setIsTransitioning(true);
+      });
     }
   }, [isTransitioning]);
 
   const nextSlide = () => {
-    if (isTransitioning) setCurrentIndex((prev) => prev + 1);
+    if (isTransitioning && isCarouselActive) setCurrentIndex((prev) => prev + 1);
   };
 
   const prevSlide = () => {
-    if (isTransitioning) setCurrentIndex((prev) => prev - 1);
+    if (isTransitioning && isCarouselActive) setCurrentIndex((prev) => prev - 1);
   };
 
   if (todos.length === 0) return <div className="empty-state">Your list is empty</div>;
 
   return (
-    <div className="carousel-container">
-      <button className="nav-btn" onClick={prevSlide}>‹</button>
+    <div className={`carousel-container ${!isCarouselActive ? "static-view" : ""}`}>
+      {isCarouselActive && <button className="nav-btn" onClick={prevSlide}>‹</button>}
 
       <div className="carousel-window">
         <div
           className="carousel-track"
           onTransitionEnd={handleTransitionEnd}
           style={{
-            transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-            transition: isTransitioning ? "transform 0.4s ease-in-out" : "none",
+            transform: isCarouselActive 
+              ? `translateX(-${currentIndex * (100 / itemsPerView)}%)` 
+              : "none",
+            transition: isTransitioning && isCarouselActive ? "transform 0.4s ease-in-out" : "none",
+            display: "flex",
           }}
         >
-          {extendedTodos.map((todo, index) => (
-            <div className="carousel-slide" key={`${todo.id}-${index}`}>
+          {displayTodos.map((todo, index) => (
+            <div 
+              className="carousel-slide" 
+              key={`${todo.id}-${index}`}
+              style={{ flex: `0 0 ${100 / itemsPerView}%` }} 
+            >
               <TodoItem todo={todo} onDelete={onDelete} onUpdate={onUpdate} onComplete={onComplete} />
             </div>
           ))}
         </div>
       </div>
 
-      <button className="nav-btn" onClick={nextSlide}>›</button>
+      {isCarouselActive && <button className="nav-btn" onClick={nextSlide}>›</button>}
     </div>
   );
 }
